@@ -13,5 +13,9 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return View::make('main');
+});
+
+Route::get('foundation', function(){
+    return View::make('foundationhtml');
 });
