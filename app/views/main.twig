@@ -1,0 +1,42 @@
+{% extends 'foundation' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="css/style.css" />
+{% endblock %}
+
+{% block content %}
+<nav class="top-bar" data-topbar>
+    <ul class="title-area">
+        <li class="name">
+            <h1>
+                <a href="#">
+                    {% if siteTitle is defined  %}
+                    {{ siteTitle }}
+                    {% else %}
+                    Welcome to the Wiki
+                    {% endif %}
+                </a>
+            </h1>
+        </li>
+    </ul>
+    {% block topBarRight %}
+    <section class="top-bar-section">
+        <!-- Right Nav Section -->
+        <ul class="right">
+            <li class="divider"></li>
+            <li class="has-dropdown user-drop">
+                <a href="#">{{ auth_user().username }}</a>
+                <ul class="dropdown">
+                    <li><a href="{{ route('logout') }}">Logout</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    {% endblock %}
+</nav>
+
+<section class="main-section">
+    {% block main %}{% endblock %}
+</section>
+{% endblock %}

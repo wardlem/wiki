@@ -11,10 +11,34 @@
 |
 */
 
-Route::get('/', function()
+Route::get('/', array('as' => 'home', function()
 {
 	return View::make('main');
-});
+}))->before('auth');
+
+Route::get('login', array('as' => 'login', function(){
+    return View::make('auth.login');
+}))->before('guest');
+
+Route::post('login', array('as' => 'login_check', function(){
+
+    if ( ! Input::has('email') || ! Input::has('password')){
+        Session::flash('login_error', 'The server didn\'t receive the proper data.');
+    } else if (Auth::attempt(array('email' => Input::get('email'), 'password' => Input::get('password')))){
+        return Redirect::intended('dashboard');
+    } else {
+        Session::flash('login_error', 'Login failed yo.');
+    }
+    return View::make('auth.login');
+
+}))->before('csrf');
+
+Route::get('logout', array('as' => 'logout', function(){
+    Auth::logout();
+    Session::flash('logout_success', 'You have successfully logged out.');
+    return Redirect::guest('/');
+}))->before('auth');
+
 
 Route::get('foundation', function(){
     return View::make('foundationhtml');
