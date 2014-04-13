@@ -8,14 +8,14 @@
             Wiki | Default
         {% endblock %}
     </title>
-    <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="{{ asset('css/foundation.css') }}" />
     {% block stylesheets %}{% endblock %}
-    <script src="js/vendor/modernizr.js"></script>
+    <script src="{{ asset('js/vendor/modernizr.js') }}"></script>
 </head>
 <body>
 {% block content %}{% endblock %}
-<script src="js/vendor/jquery.js"></script>
-<script src="js/foundation.min.js"></script>
+<script src="{{ asset('js/vendor/jquery.js') }}"></script>
+<script src="{{ asset('js/foundation.min.js') }}"></script>
 <script>
     $(document).foundation();
 </script>

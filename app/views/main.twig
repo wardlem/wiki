@@ -1,42 +1,93 @@
 {% extends 'foundation' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
 {% endblock %}
 
 {% block content %}
-<nav class="top-bar" data-topbar>
-    <ul class="title-area">
-        <li class="name">
-            <h1>
-                <a href="#">
-                    {% if siteTitle is defined  %}
-                    {{ siteTitle }}
-                    {% else %}
-                    Welcome to the Wiki
-                    {% endif %}
-                </a>
-            </h1>
-        </li>
-    </ul>
-    {% block topBarRight %}
-    <section class="top-bar-section">
-        <!-- Right Nav Section -->
-        <ul class="right">
-            <li class="divider"></li>
-            <li class="has-dropdown user-drop">
-                <a href="#">{{ auth_user().username }}</a>
-                <ul class="dropdown">
-                    <li><a href="{{ route('logout') }}">Logout</a></li>
-                    <li><a href="#">Settings</a></li>
-                </ul>
+    <nav class="top-bar" data-topbar>
+        <ul class="title-area">
+            <li class="name">
+                <h1>
+                    <a href="{{ route('home') }}">
+                        {% if siteTitle is defined  %}
+                            {{ siteTitle }}
+                        {% else %}
+                            Welcome to the Wiki
+                        {% endif %}
+                    </a>
+                </h1>
             </li>
         </ul>
-    </section>
-    {% endblock %}
-</nav>
+        {% block topBarRight %}
+            <section class="top-bar-section">
+                <!-- Right Nav Section -->
+                <ul class="right">
+                    {% block topRightNav %}
+                    <li class="divider"></li>
+                    <li><a href="#"><span class="menu-icon">+</span> New Article</a></li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown user-drop">
+                        <a href="#">{{ auth_user().username }}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ route('logout') }}">Logout</a></li>
+                            <li><a href="#">Settings</a></li>
+                        </ul>
+                    </li>
+                    {% endblock %}
+                </ul>
+            </section>
+        {% endblock %}
+    </nav>
 
-<section class="main-section">
-    {% block main %}{% endblock %}
-</section>
+    <section class="main-content">
+        {% block main %}
+            <div class="row" data-equalizer>
+                <div class="hide-for-small">
+                    <aside class="columns large-2 sidebar" data-equalizer-watch>
+                        {% if categories is defined %}
+                            <h6>Search</h6>
+                            {{ form_text('search', null, {placeholder: 'Find stuff...'}) }}
+                            <h6>Categories</h6>
+                            <dl class="accordion" data-accordion>
+                                {% for category in categories %}
+                                    <dd>
+                                        <a href="#category-{{ category.slugify() }}">{{ category.name }}</a>
+                                        <div id="category-{{ category.slugify() }}" class="content">
+                                            <ul class="side-nav">
+                                                {% for page in category.pages %}
+                                                    <li><a href="{{ route('page', page.slug) }}">{{ page.title }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </dd>
+                                {% endfor %}
+                            </dl>
+                            <ul class="side-nav">
+                                <li>
+                                    <a href="#" data-dropdown="add-category">Add a Category</a>
+                                    <div id="add-category" data-dropdown-content class="f-dropdown content">
+                                        <p>This will be a form</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </aside>
+                </div>
+
+                <article class="large-10 columns main-article" data-equalizer-watch>
+                    {% block article %}
+                        <h2>
+                            {% if page is defined %}
+                                {{ page.title }}
+                            {% else %}
+                                Welcome
+                            {% endif %}
+                        </h2>
+                    {% endblock %}
+                </article>
+            </div>
+
+        {% endblock %}
+    </section>
 {% endblock %}

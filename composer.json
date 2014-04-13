@@ -5,7 +5,8 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.1.*",
-        "rcrowe/twigbridge": "0.5.*"
+        "rcrowe/twigbridge": "0.5.*",
+        "danielstjules/stringy": "1.5.*"
 	},
 	"autoload": {
 		"classmap": [

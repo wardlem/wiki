@@ -11,13 +11,12 @@
 |
 */
 
-Route::get('/', array('as' => 'home', function()
-{
-	return View::make('main');
-}))->before('auth');
+Route::get('/', array('as' => 'home', 'uses' => 'PageController@homePage'))->before('auth');
+
+Route::get('page/{slug}', array('as' => 'page', 'uses' => 'PageController@page'))->before('auth');
 
 Route::get('login', array('as' => 'login', function(){
-    return View::make('auth.login');
+    return View::make('login');
 }))->before('guest');
 
 Route::post('login', array('as' => 'login_check', function(){
@@ -29,7 +28,7 @@ Route::post('login', array('as' => 'login_check', function(){
     } else {
         Session::flash('login_error', 'Login failed yo.');
     }
-    return View::make('auth.login');
+    return View::make('login');
 
 }))->before('csrf');
 

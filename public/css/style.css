@@ -5,3 +5,17 @@
 .user-drop {
     min-width:100px;
 }
+
+.row {
+    max-width: none;
+    padding: 0 3%;
+}
+
+.sidebar {
+    background: #F7F7F7;
+    padding-top: 26px;
+}
+
+.main-article {
+    padding-top: 20px;
+}

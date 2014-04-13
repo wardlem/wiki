@@ -13,7 +13,14 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
+        DB::table('comments')->delete();
+        DB::table('revisions')->delete();
+        DB::table('pages')->delete();
+        DB::table('categories')->delete();
+
 		$this->call('UserTableSeeder');
+        $this->call('PageTypesTableSeeder');
+        $this->call('TestDataSeeder');
 	}
 
 }

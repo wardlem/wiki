@@ -1,0 +1,30 @@
+{% extends 'main' %}
+{% block article %}
+    <dl class="tabs" data-tab>
+        <dd class="active"><a href="#panel-content">Content</a></dd>
+        <dd><a href="#panel-revisions">Revisions</a></dd>
+        <dd><a href="#panel-discussion">Discussion</a></dd>
+    </dl>
+    {{ parent() }}
+    <div class="tabs-content">
+        <div class="content active" id="panel-content">
+            {{ page.render() }}
+            {% if page is defined %}
+                {% for catPage in page.category.pages %}
+
+                {% endfor %}
+            {% endif  %}
+        </div>
+        <div class="content" id="panel-revisions">
+
+        </div>
+        <div class="content" id="panel-discussion">
+
+        </div>
+    </div>
+{% endblock %}
+{% block topRightNav %}
+    <li class="divider"></li>
+    <li><a href="#"><span>+</span> Edit Article</a></li>
+    {{ parent() }}
+{% endblock %}
