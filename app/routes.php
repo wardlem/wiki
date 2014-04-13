@@ -11,9 +11,69 @@
 |
 */
 
-Route::get('/', array('as' => 'home', 'uses' => 'PageController@homePage'))->before('auth');
+/*
+|--------------------------------------------------------------------------
+| Model Bindings
+|--------------------------------------------------------------------------
+|
+*/
 
-Route::get('page/{slug}', array('as' => 'page', 'uses' => 'PageController@page'))->before('auth');
+Route::model('user', 'User');
+Route::model('comment', 'Comment');
+Route::bind('page', function($value, $route){
+    if (is_numeric($value)){
+        return Page::find($value);
+    }
+    return Page::where('slug', 'LIKE', $value)->first();
+});
+
+/*
+|--------------------------------------------------------------------------
+| Home Page Route
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::get('/', array('as' => 'home', 'uses' => 'PageController@homePage'))
+    ->before('auth');
+
+/*
+|--------------------------------------------------------------------------
+| Pages Route
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::get('page/{page}/{tab?}', array('as' => 'page', 'uses' => 'PageController@page'))
+    ->before('auth')
+    ->where('tab', '(content|revisions|discussion)');
+
+/*
+|--------------------------------------------------------------------------
+| Comment Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::group(array('prefix' => 'comment', 'before' => 'auth'), function(){
+    Route::post('{page}', array('as' => 'post_comment', 'uses' => 'CommentController@postComment'))
+        ->where('page', '[0-9]+');
+
+    Route::post('{comment}/reply', array('as' => 'comment_reply', 'uses' => 'CommentController@replyToComment'));
+
+    Route::put('{comment}', array('as' => 'update_comment', 'uses' => 'CommentController@updateComment'));
+
+    Route::delete('{comment}', array('as' => 'delete_comment', 'uses' => 'CommentController@deleteComment'));
+});
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+|
+*/
 
 Route::get('login', array('as' => 'login', function(){
     return View::make('login');
@@ -38,7 +98,12 @@ Route::get('logout', array('as' => 'logout', function(){
     return Redirect::guest('/');
 }))->before('auth');
 
-
+/*
+|--------------------------------------------------------------------------
+| Utility Routes
+|--------------------------------------------------------------------------
+|
+*/
 Route::get('foundation', function(){
     return View::make('foundationhtml');
 });

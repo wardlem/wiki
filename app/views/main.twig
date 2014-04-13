@@ -25,7 +25,7 @@
                 <ul class="right">
                     {% block topRightNav %}
                     <li class="divider"></li>
-                    <li><a href="#"><span class="menu-icon">+</span> New Article</a></li>
+                    <li><a href="#"><span class="menu-icon">+</span> New Page</a></li>
                     <li class="divider"></li>
                     <li class="has-dropdown user-drop">
                         <a href="#">{{ auth_user().username }}</a>
@@ -46,9 +46,7 @@
                 <div class="hide-for-small">
                     <aside class="columns large-2 sidebar" data-equalizer-watch>
                         {% if categories is defined %}
-                            <h6>Search</h6>
                             {{ form_text('search', null, {placeholder: 'Find stuff...'}) }}
-                            <h6>Categories</h6>
                             <dl class="accordion" data-accordion>
                                 {% for category in categories %}
                                     <dd>
@@ -63,14 +61,7 @@
                                     </dd>
                                 {% endfor %}
                             </dl>
-                            <ul class="side-nav">
-                                <li>
-                                    <a href="#" data-dropdown="add-category">Add a Category</a>
-                                    <div id="add-category" data-dropdown-content class="f-dropdown content">
-                                        <p>This will be a form</p>
-                                    </div>
-                                </li>
-                            </ul>
+
                         {% endif %}
                     </aside>
                 </div>

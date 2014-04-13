@@ -82,14 +82,18 @@ class TestDataSeeder extends Seeder
             'parent_comment_id' => null,
         ));
 
-        $comment1 = Comment::create(array(
+        $comment2 = Comment::create(array(
             'page_id' => $telepathy->id,
             'user_id' => $mark->id,
             'content' => 'You know what, I haven\'t figured that out yet.',
             'parent_comment_id' => $comment1->id,
         ));
 
-
+        $comment3 = Comment::create(array(
+            'page_id' => $telepathy->id,
+            'user_id' => $mark->id,
+            'content' => 'I think this is going to be great.',
+        ));
 
         $this->command->info('Test Data seeded.');
     }

@@ -1,11 +1,43 @@
 {% macro renderComments(comments, level) %}
-    {% for comment in comments %}
+    {% for comment in comments.sortBy('created_at') %}
         <div class="comment panel level-{{ level }}">
             <h5>{{ comment.user.username }}</h5>
+            <p>{{ comment.created_at }}</p>
             <p>{{ comment.content }}</p>
+            <ul class="inline-list">
+                <li>
+                    <a href="{{ route('comment_reply', {'comment': comment.id}) }}" data-dropdown="reply-{{ comment.id }}">Reply</a>
+                    <div id="reply-{{ comment.id }}" data-dropdown-content class="large f-dropdown content">
+                        <div class="row">
+                            <div class="columns large-12">
+                                {{ form_open({'route': ['comment_reply', comment.id], 'method': 'post'}) }}
+                                {{ form_label('content', 'Reply Here:') }}
+                                {{ form_textarea('content', '', {'placeholder': 'Enter your reply...'}) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="large-12 columns right-align">
+                                {{ form_submit('Reply', {'class': 'button small'}) }}
+                            </div>
+                        </div>
+                        {{ form_close() }}
+                    </div>
+                </li>
+                {% if (auth_user() == comment.user ) %}
+                    <li><a href="{{ route('update_comment', {'comment': comment.id}) }}">Edit</a></li>
+                {% endif %}
+                <li>
+                    {% if comment.childComments.count() %}
+                        <a href="#" data-id="{{ comment.id }}">Hide Replies</a>
+                    {% endif %}
+                </li>
+            </ul>
+
         </div>
-        {% if comment.childComments %}
-            {{ _self.renderComments(comment.childComments, level + 1) }}
+        {% if comment.childComments.count() %}
+            <div id="sub-comment-for-{{ comment.id }}" class="sub-comment">
+                {{ _self.renderComments(comment.childComments, level + 1) }}
+            </div>
         {% endif %}
     {% endfor %}
 {% endmacro %}

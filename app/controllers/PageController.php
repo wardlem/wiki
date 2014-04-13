@@ -9,9 +9,11 @@ class PageController extends \Illuminate\Routing\Controller
         ));
     }
 
-    public function page($slug)
+    public function page($page, $tab = 'content')
     {
-        $page = Page::where('slug', 'LIKE', $slug)->first();
+        if (! in_array($tab, array('content', 'revisions', 'discussion'))){
+            $tab = 'content';
+        }
         if (!$page){
             return false;
         }
@@ -19,6 +21,7 @@ class PageController extends \Illuminate\Routing\Controller
             'categories' => $this->getCategories(),
             'pageContent' => $page->content,
             'page' => $page,
+            'tab' => $tab,
         ));
     }
 

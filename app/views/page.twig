@@ -2,28 +2,47 @@
 {% import 'macros.comments' as comments %}
 {% block article %}
     <dl class="tabs" data-tab>
-        <dd class="active"><a href="#panel-content">Content</a></dd>
-        <dd><a href="#panel-revisions">Revisions</a></dd>
-        <dd><a href="#panel-discussion">Discussion</a></dd>
+        {% for tabName in ['content', 'revisions', 'discussion'] %}
+        <dd{% if tab == tabName %} class = "active"{% endif %}>
+            <a href="#panel-{{ tabName }}">{{ tabName|title }}</a>
+        </dd>
+        {% endfor %}
     </dl>
     {{ parent() }}
     <div class="tabs-content">
-        <div class="content active" id="panel-content">
+        <div class="content{% if tab == 'content' %} active{% endif %}" id="panel-content">
             {{ page.render() }}
             {% for catPage in page.category.pages %}
 
             {% endfor %}
         </div>
-        <div class="content" id="panel-revisions">
-
+        <div class="content{% if tab == 'revisions' %} active{% endif %}" id="panel-revisions">
+            {% if page.revisions.count() %}
+            <p>There are Revisions</p>
+            {% else %}
+            <p>There have been no revisions to this page</p>
+            {% endif %}
         </div>
-        <div class="content" id="panel-discussion">
+        <div class="content{% if tab == 'discussion' %} active{% endif %}" id="panel-discussion">
+            <div class="row">
+                <div class="columns large-12">
+                    {{ form_open({'route': ['post_comment', page.id], 'method': 'post'}) }}
+                    {{ form_label('content', 'Add a Comment:') }}
+                    {{ form_textarea('content', '', {'placeholder': 'Enter your comment...'}) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-12 columns right-align">
+                    {{ form_submit('Post Comment', {'class': 'button small'}) }}
+                </div>
+            </div>
+            {{ form_close() }}
             {{ comments.renderComments(page.topLevelComments, 0) }}
         </div>
     </div>
 {% endblock %}
 {% block topRightNav %}
     <li class="divider"></li>
-    <li><a href="#"><span>+</span> Edit Article</a></li>
+    <li><a href="#"><span>+</span> Edit Page</a></li>
     {{ parent() }}
 {% endblock %}

@@ -39,7 +39,7 @@ class CreateForeignKeys extends Migration {
         });
         Schema::table('comments', function(Blueprint $table) {
             $table->foreign('parent_comment_id')->references('id')->on('comments')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
         Schema::table('comments', function(Blueprint $table) {
