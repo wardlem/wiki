@@ -19,3 +19,35 @@
 .main-article {
     padding-top: 20px;
 }
+
+.comment.level-1 {
+    margin-left:20px;
+}
+
+.comment.level-2 {
+    margin-left:40px;
+}
+
+.comment.level-3 {
+    margin-left:60px;
+}
+
+.comment.level-4 {
+    margin-left:80px;
+}
+
+.comment.level-5 {
+    margin-left:100px;
+}
+
+.comment.level-6 {
+    margin-left:110px;
+}
+
+.comment.level-7 {
+    margin-left:120px;
+}
+
+.comment.level-8 {
+    margin-left:130px;
+}

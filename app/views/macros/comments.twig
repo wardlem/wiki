@@ -1,0 +1,11 @@
+{% macro renderComments(comments, level) %}
+    {% for comment in comments %}
+        <div class="comment panel level-{{ level }}">
+            <h5>{{ comment.user.username }}</h5>
+            <p>{{ comment.content }}</p>
+        </div>
+        {% if comment.childComments %}
+            {{ _self.renderComments(comment.childComments, level + 1) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

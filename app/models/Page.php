@@ -17,6 +17,11 @@ class Page extends WikiModel
         return $this->hasMany('Comment');
     }
 
+    public function topLevelComments()
+    {
+        return Comment::where('page_id', '=', $this->id)->whereRaw('parent_comment_id IS NULL')->get();
+    }
+
     public function revisions()
     {
         return $this->hasMany('Revision');
@@ -31,4 +36,6 @@ class Page extends WikiModel
     {
        return $this->content;
     }
+
+
 }

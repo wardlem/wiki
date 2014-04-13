@@ -24,9 +24,7 @@ class PageController extends \Illuminate\Routing\Controller
 
     protected function getCategories()
     {
-        $categories = Category::all()->sortBy(function($cat){
-            return $cat->name;
-        });
+        $categories = Category::with('Pages')->get()->sortBy('name');
         return $categories;
     }
 }
