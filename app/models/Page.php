@@ -29,7 +29,7 @@ class Page extends WikiModel
 
     public function type()
     {
-        return $this->belongsTo('PageType');
+        return $this->belongsTo('PageType', 'page_type_id');
     }
 
     public function render()

@@ -54,7 +54,7 @@
                                         <div id="category-{{ category.slugify() }}" class="content">
                                             <ul class="side-nav">
                                                 {% for page in category.pages %}
-                                                    <li><a href="{{ route('page', page.slug) }}">{{ page.title }}</a></li>
+                                                    <li><a href="{{ route(page.type.url_prefix, page.slug) }}">{{ page.title }}</a></li>
                                                 {% endfor %}
                                             </ul>
                                         </div>

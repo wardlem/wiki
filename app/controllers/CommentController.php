@@ -1,6 +1,6 @@
 <?php
 
-class CommentController extends \Illuminate\Routing\Controller
+class CommentController extends BaseController
 {
     public function postComment(Page $page)
     {
@@ -16,7 +16,7 @@ class CommentController extends \Illuminate\Routing\Controller
             $comment->save();
         }
 
-        return Redirect::route('page', array('page' => $page->slug, 'tab' => 'discussion'));
+        return $this->pageRedirect($page, 'discussion');
 
     }
 
@@ -44,7 +44,7 @@ class CommentController extends \Illuminate\Routing\Controller
             $reply->save();
         }
 
-        return Redirect::route('page', array('page' => $comment->page->slug, 'tab' => 'discussion'));
+        return $this->pageRedirect($comment->page, 'discussion');
 
     }
 }

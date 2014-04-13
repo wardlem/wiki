@@ -44,9 +44,13 @@ Route::get('/', array('as' => 'home', 'uses' => 'PageController@homePage'))
 |
 */
 
-Route::get('page/{page}/{tab?}', array('as' => 'page', 'uses' => 'PageController@page'))
-    ->before('auth')
-    ->where('tab', '(content|revisions|discussion)');
+$pageTypes = PageType::all()->each(function($type){
+    Route::get($type->url_prefix . '/{page}/{tab?}', array('as' => $type->url_prefix, 'uses' => 'PageController@page'))
+        ->before('auth')
+        ->where('tab', '(content|revisions|discussion)');
+});
+
+
 
 /*
 |--------------------------------------------------------------------------

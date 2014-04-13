@@ -9,4 +9,10 @@ class PageType extends WikiModel
     {
         return $this->hasMany('Page', 'page_type_id');
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
 }
