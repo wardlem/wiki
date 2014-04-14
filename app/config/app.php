@@ -107,6 +107,7 @@ return array(
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Workbench\WorkbenchServiceProvider',
         'TwigBridge\TwigServiceProvider',
+        'Markdown\MarkdownServiceProvider',
     ),
 
     /*
@@ -172,6 +173,7 @@ return array(
         'URL'             => 'Illuminate\Support\Facades\URL',
         'Validator'       => 'Illuminate\Support\Facades\Validator',
         'View'            => 'Illuminate\Support\Facades\View',
+        'Markdown'        => 'Markdown\MarkdownFacade',
 
     ),
 

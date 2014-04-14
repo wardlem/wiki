@@ -6,6 +6,12 @@ class Page extends WikiModel
     public $timestamps = true;
     protected $trackUsers = true;
     protected $softDelete = true;
+    protected $validation = array(
+        'category_id' => 'sometimes|exists:categories,id|required',
+        'slug' => 'sometimes|alpha_dash|unique:pages|required',
+        'title' => 'sometimes|required|unique:pages',
+        'page_type_id' => 'sometimes|required'
+    );
 
     public function category()
     {
@@ -34,7 +40,8 @@ class Page extends WikiModel
 
     public function render()
     {
-       return $this->content;
+
+       return Markdown::parse($this->content);
     }
 
 

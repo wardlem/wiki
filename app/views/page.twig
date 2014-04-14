@@ -2,10 +2,10 @@
 {% import 'macros.comments' as comments %}
 {% block article %}
     <dl class="tabs" data-tab>
-        {% for tabName in ['content', 'revisions', 'discussion'] %}
-        <dd{% if tab == tabName %} class = "active"{% endif %}>
-            <a href="#panel-{{ tabName }}">{{ tabName|title }}</a>
-        </dd>
+        {% for tabName in ['content', 'revisions', 'discussion', 'edit'] %}
+            <dd{% if tab == tabName %} class = "active"{% endif %}>
+                <a href="#panel-{{ tabName }}">{{ tabName|title }}</a>
+            </dd>
         {% endfor %}
     </dl>
     {{ parent() }}
@@ -18,9 +18,9 @@
         </div>
         <div class="content{% if tab == 'revisions' %} active{% endif %}" id="panel-revisions">
             {% if page.revisions.count() %}
-            <p>There are Revisions</p>
+                <p>There are Revisions</p>
             {% else %}
-            <p>There have been no revisions to this page</p>
+                <p>There have been no revisions to this page</p>
             {% endif %}
         </div>
         <div class="content{% if tab == 'discussion' %} active{% endif %}" id="panel-discussion">
@@ -38,6 +38,53 @@
             </div>
             {{ form_close() }}
             {{ comments.renderComments(page.topLevelComments, 0) }}
+        </div>
+        <div class="content{% if tab == 'edit' %} active{% endif %}" id="panel-edit">
+            {% if errors is defined %}
+                <p>Error is defined</p>
+            {% else %}
+                <p>Error is not defined</p>
+            {% endif %}
+            {{ form_model(page, {'route': ['update_page', page.id], 'method': 'put'}) }}
+            <div class="row">
+                <div class="large-4 columns">
+                    {{ form_label('title', 'Title') }}
+                    {{ form_text('title') }}
+                    {% if errors.has('title') %}
+                        <small class="error">{{ errors.first('title') }}</small>
+                    {% endif %}
+                </div>
+                <div class="large-4 columns">
+                    {{ form_label('slug', 'Url Slug') }}
+                    {{ form_text('slug') }}
+                    {% if errors.has('slug') %}
+                        <small class="error">{{ errors.first('slug') }}</small>
+                    {% endif %}
+                </div>
+                <div class="large-4 columns">
+                    {{ form_label('category_id', 'Category') }}
+                    {{ form_select('category_id', categories.lists('name', 'id')) }}
+                    {% if errors.has('category_id') %}
+                        <small class="error">{{ errors.first('category_id') }}</small>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns large-12">
+                    {{ form_label('content', 'Content') }}
+                    {{ form_textarea('content') }}
+                    {% if errors.has('content') %}
+                        <small class="error">{{ errors.first('content') }}</small>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-12 columns right-align">
+                    {{ form_submit('Update', {'class': 'button small'}) }}
+                </div>
+            </div>
+
+            {{ form_close() }}
         </div>
     </div>
 {% endblock %}
