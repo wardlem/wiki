@@ -40,11 +40,6 @@
             {{ comments.renderComments(page.topLevelComments, 0) }}
         </div>
         <div class="content{% if tab == 'edit' %} active{% endif %}" id="panel-edit">
-            {% if errors is defined %}
-                <p>Error is defined</p>
-            {% else %}
-                <p>Error is not defined</p>
-            {% endif %}
             {{ form_model(page, {'route': ['update_page', page.id], 'method': 'put'}) }}
             <div class="row">
                 <div class="large-4 columns">

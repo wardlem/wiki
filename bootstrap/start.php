@@ -58,16 +58,6 @@ $framework = $app['path.base'].'/vendor/laravel/framework/src';
 
 require $framework.'/Illuminate/Foundation/start.php';
 
-/*
-|--------------------------------------------------------------------------
-| Load The Application's Inversion of Control File
-|--------------------------------------------------------------------------
-|
-|
-|
-*/
-
-require __DIR__ . '../../start/ioc.php';
 
 /*
 |--------------------------------------------------------------------------
