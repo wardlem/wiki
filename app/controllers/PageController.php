@@ -29,16 +29,20 @@ class PageController extends BaseController
 
     public function updatePage(Page $page)
     {
-
+        $fields = array('category_id', 'content', 'title', 'slug');
         $values = array();
-        foreach (array('category_id', 'content', 'title', 'slug') as $field){
+        foreach ($fields as $field){
             if (Input::get($field) !== $page->{$field}){
                 $values[$field] = Input::get($field);
             }
         }
         $v = Validator::make($values, $page->validationRules());
         if ($v->fails()){
-            return $this->pageRedirect($page, 'edit')->withErrors($v);
+            foreach($fields as $field){
+                Session::flash($field, Input::get($field));
+            }
+            return $this->pageRedirect($page, 'edit')
+                ->withErrors($v);
         }
 
         $page->category_id = Input::get('category_id');

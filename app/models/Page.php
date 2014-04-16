@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Collection;
+
 class Page extends WikiModel
 {
     protected $table = 'pages';
@@ -12,6 +14,13 @@ class Page extends WikiModel
         'title' => 'sometimes|required|unique:pages',
         'page_type_id' => 'sometimes|required'
     );
+
+    public static function boot()
+    {
+        Page::saved(function($page){
+            $page->createRevision();
+        });
+    }
 
     public function category()
     {
@@ -38,11 +47,35 @@ class Page extends WikiModel
         return $this->belongsTo('PageType', 'page_type_id');
     }
 
-    public function render()
+    public function createRevision()
     {
-
-       return Markdown::parse($this->content);
+        if ($this->content !== $this->getLatestRevision()->content){
+            $revision = new Revision();
+            $revision->page_id = $this->id;
+            $revision->created_by_id = $this->created_by_id;
+            $revision->content = $this->content;
+            $revision->save();
+        }
     }
 
+    /**
+     * Gets all the revisions made for the page
+     *
+     * @return Collection
+     */
+    public function getRevisions()
+    {
+        return $this->revisions->sortBy('created_at');
+    }
+
+    /**
+     * Gets the last revision made for the page
+     *
+     * @return Revision
+     */
+    public function getLatestRevision()
+    {
+        return $this->getRevisions()->last();
+    }
 
 }

@@ -20,7 +20,8 @@
 
 		],
         "psr-0": {
-            "Markdown": "app/lib"
+            "Markdown": "app/lib",
+            "Diff": "app/lib"
         }
 	},
 	"scripts": {

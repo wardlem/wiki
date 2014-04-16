@@ -93,7 +93,7 @@ class WikiModel extends Eloquent
             $this->setModifiedBy($user);
         }
 
-        if ( ! $this->exists && ! $this->isDirty(static::CREATED_AT))
+        if ( ! $this->exists && ! $this->isDirty(static::CREATED_BY))
         {
             $this->setCreatedBy($user);
         }

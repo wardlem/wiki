@@ -11,16 +11,23 @@
     {{ parent() }}
     <div class="tabs-content">
         <div class="content{% if tab == 'content' %} active{% endif %}" id="panel-content">
-            {{ page.render() }}
+            {{ markdown_parse(page.content) }}
             {% for catPage in page.category.pages %}
 
             {% endfor %}
         </div>
         <div class="content{% if tab == 'revisions' %} active{% endif %}" id="panel-revisions">
-            {% if page.revisions.count() %}
-                <p>There are Revisions</p>
+            {% if page.revisions.count() > 1 %}
+                {% for revision in diff_revisions(page.getRevisions())|reverse %}
+                    <div class="row">
+                        <div class="columns large-12 revision">
+                            {{ markdown_parse(revision) }}
+                        </div>
+                        <hr>
+                    </div>
+                {% endfor %}
             {% else %}
-                <p>There have been no revisions to this page</p>
+                <p>The current version of the page is the only one.</p>
             {% endif %}
         </div>
         <div class="content{% if tab == 'discussion' %} active{% endif %}" id="panel-discussion">
@@ -44,21 +51,22 @@
             <div class="row">
                 <div class="large-4 columns">
                     {{ form_label('title', 'Title') }}
-                    {{ form_text('title') }}
+                    {{ form_text('title', session_has('title') ? session_get('title') : page.title) }}
                     {% if errors.has('title') %}
                         <small class="error">{{ errors.first('title') }}</small>
                     {% endif %}
                 </div>
                 <div class="large-4 columns">
                     {{ form_label('slug', 'Url Slug') }}
-                    {{ form_text('slug') }}
+                    {{ form_text('slug', session_has('slug') ? session_get('slug') : page.slug) }}
                     {% if errors.has('slug') %}
                         <small class="error">{{ errors.first('slug') }}</small>
                     {% endif %}
                 </div>
                 <div class="large-4 columns">
                     {{ form_label('category_id', 'Category') }}
-                    {{ form_select('category_id', categories.lists('name', 'id')) }}
+                    {{ form_select('category_id', categories.lists('name', 'id'), session_has('category_id') ? session_get('category_id') : page.category_id)
+                    }}
                     {% if errors.has('category_id') %}
                         <small class="error">{{ errors.first('category_id') }}</small>
                     {% endif %}
@@ -67,7 +75,7 @@
             <div class="row">
                 <div class="columns large-12">
                     {{ form_label('content', 'Content') }}
-                    {{ form_textarea('content') }}
+                    {{ form_textarea('content', session_has('content') ? session_get('content') : page.content) }}
                     {% if errors.has('content') %}
                         <small class="error">{{ errors.first('content') }}</small>
                     {% endif %}
@@ -82,9 +90,4 @@
             {{ form_close() }}
         </div>
     </div>
-{% endblock %}
-{% block topRightNav %}
-    <li class="divider"></li>
-    <li><a href="#"><span>+</span> Edit Page</a></li>
-    {{ parent() }}
 {% endblock %}

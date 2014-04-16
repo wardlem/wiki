@@ -108,6 +108,7 @@ return array(
         'Illuminate\Workbench\WorkbenchServiceProvider',
         'TwigBridge\TwigServiceProvider',
         'Markdown\MarkdownServiceProvider',
+        'Diff\DiffServiceProvider',
     ),
 
     /*
@@ -174,6 +175,7 @@ return array(
         'Validator'       => 'Illuminate\Support\Facades\Validator',
         'View'            => 'Illuminate\Support\Facades\View',
         'Markdown'        => 'Markdown\MarkdownFacade',
+        'Diff'            => 'Diff\DiffFacade',
 
     ),
 
