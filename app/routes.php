@@ -44,15 +44,18 @@ Route::get('/', array('as' => 'home', 'uses' => 'PageController@homePage'))
 |
 */
 
-$pageTypes = PageType::all()->each(function($type){
-    Route::get($type->url_prefix . '/{page}/{tab?}', array('as' => $type->url_prefix, 'uses' => 'PageController@page'))
-        ->before('auth')
-        ->where('tab', '(content|revisions|discussion|edit)');
-});
+if (Schema::hasTable('page_types')){
+    $pageTypes = PageType::all()->each(function($type){
+        Route::get($type->url_prefix . '/{page}/{tab?}', array('as' => $type->url_prefix, 'uses' => 'PageController@page'))
+            ->before('auth')
+            ->where('tab', '(content|revisions|discussion|edit)');
+    });
 
-Route::group(array('prefix' => 'page', 'before' => 'auth'), function(){
-    Route::put('{page}', array('as' => 'update_page', 'uses' => 'PageController@updatePage'));
-});
+    Route::group(array('prefix' => 'page', 'before' => 'auth'), function(){
+        Route::put('{page}', array('as' => 'update_page', 'uses' => 'PageController@updatePage'));
+    });
+}
+
 
 
 
