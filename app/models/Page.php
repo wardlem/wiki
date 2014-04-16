@@ -49,7 +49,8 @@ class Page extends WikiModel
 
     public function createRevision()
     {
-        if ($this->content !== $this->getLatestRevision()->content){
+        $last = $this->getLatestRevision();
+        if (is_null($last) || $this->content !== $this->getLatestRevision()->content){
             $revision = new Revision();
             $revision->page_id = $this->id;
             $revision->created_by_id = $this->created_by_id;
