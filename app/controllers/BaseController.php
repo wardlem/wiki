@@ -21,7 +21,7 @@ class BaseController extends Controller {
         if (!is_null($tab)){
             $params['tab'] = $tab;
         }
-        return Redirect::route($page->type->url_prefix, $params);
+        return Redirect::route('article', $params);
     }
 
     protected function pageRoute(Page $page, $tab = null)
@@ -30,7 +30,7 @@ class BaseController extends Controller {
         if (!is_null($tab)){
             $params['tab'] = $tab;
         }
-        return route($page->type->url_prefix, $params);
+        return route('article', $params);
     }
 
 }

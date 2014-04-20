@@ -12,7 +12,6 @@ class Page extends WikiModel
         'category_id' => 'sometimes|exists:categories,id|required',
         'slug' => 'sometimes|alpha_dash|unique:pages|required',
         'title' => 'sometimes|required|unique:pages',
-        'page_type_id' => 'sometimes|required'
     );
 
     public static function boot()
@@ -40,11 +39,6 @@ class Page extends WikiModel
     public function revisions()
     {
         return $this->hasMany('Revision');
-    }
-
-    public function type()
-    {
-        return $this->belongsTo('PageType', 'page_type_id');
     }
 
     public function createRevision()

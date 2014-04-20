@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Database\Schema\Builder;
 
 class WikiModel extends Eloquent
 {
@@ -9,6 +8,10 @@ class WikiModel extends Eloquent
     const MODIFIED_BY = 'mod_by_id';
     const CREATED_BY = 'created_by_id';
     protected $trackUsers = false;
+    protected $singleTableInheritance = false;
+    protected $subClasses = array();
+    protected $distinguishingColumn = '';
+
     protected $validation = array();
 
     protected function performUpdate(\Illuminate\Database\Eloquent\Builder $query)
@@ -103,4 +106,43 @@ class WikiModel extends Eloquent
     {
         return $this->validation;
     }
+
+    public function newQuery($excludeDeleted = true)
+    {
+        $builder = parent::newQuery($excludeDeleted);
+
+        if ($this->singleTableInheritance){
+            if (is_array($this->subClasses) && !$this->isBaseModel()){
+                $builder->where(function($query){
+                    $query->where($this->distinguishingColumn, '=', get_class($this), 'OR');
+                    foreach($this->subClasses as $subClass){
+                        $query->where($this->distinguishingColumn, '=', $subClass, 'OR');
+                    }
+                });
+            } else {
+                $builder->where($this->distinguishingColumn, '=', get_class($this), 'OR');
+            }
+        }
+
+        return $builder;
+    }
+
+    public function newInstance($attributes = array(), $exists = false)
+    {
+        if ($this->singleTableInheritance){
+            $class = $attributes[$this->distinguishingColumn];
+            $model = new $class((array) $attributes);
+            $model->exists = $exists;
+            return $model;
+        }
+        return parent::newInstance($attributes, $exists);
+    }
+
+
+    protected function isBaseModel()
+    {
+        return get_parent_class($this) === 'WikiModel';
+    }
+
+
 }

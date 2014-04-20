@@ -6,8 +6,6 @@ class TestDataSeeder extends Seeder
 {
     public function run()
     {
-        $article = PageType::where('name', 'like', 'Article')->firstOrFail();
-        $media = PageType::where('name', 'like', 'Media')->firstOrFail();
         $mark = User::where('email', 'like', 'mwwardle@gmail.com')->firstOrFail();
         $dan = User::where('email', 'like', 'mystik3eb@gmail.com')->firstOrFail();
 
@@ -36,7 +34,6 @@ class TestDataSeeder extends Seeder
         ));
 
         $earth = Page::create(array(
-            'page_type_id' => $article->id,
             'category_id' => $planets->id,
             'title' => 'Earth',
             'slug' => 'earth',
@@ -46,7 +43,6 @@ class TestDataSeeder extends Seeder
         ));
 
         $telepathy = Page::create(array(
-            'page_type_id' => $article->id,
             'category_id' => $interverse->id,
             'title' => 'Telepathy',
             'slug' => 'telepathy',
@@ -56,7 +52,6 @@ class TestDataSeeder extends Seeder
         ));
 
         $traitor = Page::create(array(
-            'page_type_id' => $article->id,
             'category_id' => $characters->id,
             'title' => 'The Traitor',
             'slug' => 'the-traitor',
@@ -66,7 +61,6 @@ class TestDataSeeder extends Seeder
         ));
 
         $ashtar = Page::create(array(
-            'page_type_id' => $article->id,
             'category_id' => $characters->id,
             'title' => 'Ashtar',
             'slug' => 'ashtar',

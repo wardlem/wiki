@@ -31,3 +31,11 @@
 .revision ins {
     color: green;
 }
+
+.underline {
+    text-decoration: underline;
+}
+
+.monospace {
+    font-family: "courier new", courier, typewriter, monospace;
+}

@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder {
         DB::table('categories')->delete();
 
 		$this->call('UserTableSeeder');
-        $this->call('PageTypesTableSeeder');
         $this->call('TestDataSeeder');
 	}
 

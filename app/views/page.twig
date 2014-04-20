@@ -11,7 +11,7 @@
     {{ parent() }}
     <div class="tabs-content">
         <div class="content{% if tab == 'content' %} active{% endif %}" id="panel-content">
-            {{ markdown_parse(page.content) }}
+            {{ markup_parse(page.content) }}
             {% for catPage in page.category.pages %}
 
             {% endfor %}
@@ -21,7 +21,7 @@
                 {% for revision in diff_revisions(page.getRevisions())|reverse %}
                     <div class="row">
                         <div class="columns large-12 revision">
-                            {{ markdown_parse(revision) }}
+                            {{ markup_parse(revision) }}
                         </div>
                         <hr>
                     </div>

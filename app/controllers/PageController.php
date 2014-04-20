@@ -56,7 +56,7 @@ class PageController extends BaseController
 
     protected function getCategories()
     {
-        $categories = Category::with('pages.type')->get()->sortBy('name');
+        $categories = Category::with('pages')->get()->sortBy('name');
         return $categories;
     }
 

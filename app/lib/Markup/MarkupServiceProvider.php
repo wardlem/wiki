@@ -1,10 +1,10 @@
 <?php
 
-namespace Markdown;
+namespace Markup;
 
 use Illuminate\Support\ServiceProvider;
 
-class MarkdownServiceProvider extends ServiceProvider
+class MarkupServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -14,8 +14,8 @@ class MarkdownServiceProvider extends ServiceProvider
     public function register()
     {
 
-        $this->app->singleton('markdown', function(){
-            return new WikiMarkdown();
+        $this->app->singleton('markup', function(){
+            return new WikiMarkup();
         });
     }
 

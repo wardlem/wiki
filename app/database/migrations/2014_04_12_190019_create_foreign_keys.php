@@ -75,18 +75,15 @@ class CreateForeignKeys extends Migration {
 
         Schema::table('comments', function(Blueprint $table) {
             $table->dropForeign('comments_page_id_foreign');
-        });
-        Schema::table('comments', function(Blueprint $table) {
             $table->dropForeign('comments_parent_comment_id_foreign');
-        });
-        Schema::table('comments', function(Blueprint $table) {
             $table->dropForeign('comments_user_id_foreign');
         });
+
         Schema::table('revisions', function(Blueprint $table) {
             $table->dropForeign('revisions_page_id_foreign');
-        });
-        Schema::table('revisions', function(Blueprint $table) {
             $table->dropForeign('revisions_created_by_id_foreign');
+
         });
+
     }
 }

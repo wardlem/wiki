@@ -9,7 +9,7 @@ class CreatePageTable extends Migration {
 	{
 		Schema::create('pages', function(Blueprint $table) {
 			$table->increments('id');
-            $table->integer('page_type_id');
+            $table->enum('page_type', array('article', 'media'));
             $table->integer('category_id')->unsigned()->nullable();
 			$table->string('title')->unique();
 			$table->string('slug')->unique();
