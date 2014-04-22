@@ -23,6 +23,7 @@ class Differ
     public function revisions($revisions)
     {
         $test = array();
+
         foreach ($revisions as $revision){
             $test[] = $revision->content;
         }

@@ -45,7 +45,7 @@ class SimpleDiff
     }
 
     function htmlDiff($old, $new){
-        $ret = '';
+        $ret = '<div>';
         $diff = $this->diff(preg_split("/[\s]+/", $old), preg_split("/[\s]+/", $new));
         foreach($diff as $k){
             if(is_array($k))
@@ -53,7 +53,7 @@ class SimpleDiff
                     (!empty($k['i'])?"<ins>".implode(' ',$k['i'])."</ins> ":'');
             else $ret .= $k . ' ';
         }
-        return $ret;
+        return $ret . '</div>';
     }
 
 

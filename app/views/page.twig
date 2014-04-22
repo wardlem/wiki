@@ -21,7 +21,7 @@
                 {% for revision in diff_revisions(page.getRevisions())|reverse %}
                     <div class="row">
                         <div class="columns large-12 revision">
-                            {{ markup_parse(revision) }}
+                            {{ revision }}
                         </div>
                         <hr>
                     </div>

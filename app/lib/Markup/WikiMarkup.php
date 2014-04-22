@@ -21,6 +21,8 @@ class WikiMarkup extends Markdown
             case '#':
                 if (isset($line[1]) && $line[1] == ' ') {
                     return 'orderedList';
+                } else if (strpos($line, '###') === 0){
+                    return 'pre';
                 }
                 break; // Not a list tag
             case '=':
@@ -38,7 +40,7 @@ class WikiMarkup extends Markdown
             case '|':
                 return 'table';
             case '/':
-                if (strpos($line, '/*') === 0){
+                if (strpos($line, '/* ') === 0){
                     return 'comment';
                 } else if (rtrim($line) === '//'){
                     return 'lineBreak';
@@ -47,11 +49,18 @@ class WikiMarkup extends Markdown
             case '>':
                 if (isset($line[1]) && $line[1] == ' '){
                     return 'quote';
+                } else if (strpos($line, '>>>') === 0){
+                    return 'panel';
                 }
                 break;
             case '{':
                 if (rtrim($line) === '{{{'){
                     return 'noFormat';
+                }
+                break;
+            case '&':
+                if (strpos($line, '&&&') === 0){
+                    return 'escapeHtml';
                 }
                 break;
 
@@ -103,6 +112,63 @@ class WikiMarkup extends Markdown
         return [$block, $i];
     }
 
+    protected function consumePre($lines, $current)
+    {
+        // consume until ###
+        $block = [
+            'type' => 'pre',
+            'content' => [],
+        ];
+        for($i = $current + 1, $count = count($lines); $i < $count; $i++) {
+            if (rtrim($line = $lines[$i]) !== '###') {
+                $block['content'][] = $line;
+            } else {
+                break;
+            }
+        }
+        return [$block, $i];
+    }
+
+    protected function consumeEscapeHTML($lines, $current)
+    {
+        // consume until &&&
+        $block = [
+            'type' => 'escapeHTML',
+            'content' => [],
+        ];
+        for($i = $current + 1, $count = count($lines); $i < $count; $i++) {
+            if (rtrim($line = $lines[$i]) !== '&&&') {
+                $block['content'][] = $line;
+            } else {
+                break;
+            }
+        }
+        return [$block, $i];
+    }
+
+    protected function consumePanel($lines, $current)
+    {
+        // consume until >>>
+        $block = [
+            'type' => 'panel',
+            'content' => [],
+        ];
+        $line = rtrim($lines[$current]);
+        $fence = substr($line, 0, $pos = strrpos($line, '`') + 1);
+        $extra = substr($line, $pos);
+        if (!empty($extra)) {
+            $block['extra'] = $extra;
+        }
+        for($i = $current + 1, $count = count($lines); $i < $count; $i++) {
+            if (rtrim($line = $lines[$i]) !== '>>>') {
+                $block['content'][] = $line;
+            } else {
+                break;
+            }
+        }
+        return [$block, $i];
+    }
+
     protected function consumeLineBreak($lines, $current)
     {
         return [['type' => 'lineBreak'], $current];
@@ -141,41 +207,52 @@ class WikiMarkup extends Markdown
         return $this->consumeList($lines, $current, 'ul');
     }
 
-    protected function consumeList($lines, $current, $type, $level = 1)
+    protected function consumeList($lines, $current, $type, $notUsed = null)
     {
         $block = [
             'type' => 'list',
             'list' => $type,
-            'items' => []
+            'items' => [],
         ];
 
+        $char = $type === 'ol' ? '#' : '*';
+
         for ($i = $current, $count = count($lines); $i < $count; $i++){
-            $line = ltrim($lines[$i]);
-            if ($line === ''){
-                break;
-            }
-            if (isset($line[$level])){
-                switch($line[$level]){
-                    case ' ':
-                        $block['items'][] = $line;
-                        break;
-                    case '#':
-                        $data = $this->consumeList($lines, $i, 'ol', ++$level);
-                        $block['items'][] = $data[0];
-                        $i = $data[1]++;
-                        break;
-                    case '*':
-                        $data = $this->consumeList($lines, $i, 'ul', ++$level);
-                        $block['items'][] = $data[0];
-                        $i = $data[1]++;
-                        break;
-                    default:
-                        break 2;
+            $line = $lines[$i];
+            if (isset($line[0]) && $line[0] === $char){
+                if (!isset($line[1])){
+                    $block['items'][] = '';
+                } else {
+                    switch($line[1]){
+                        case ' ':
+                            $block['items'][] = substr($line, 2);
+                            break;
+                        case '#':
+                        case '*':
+                            $subChar = $line[1];
+                            $subList = [];
+                            for (; $i < $count; $i++){
+                                $subLine = substr($lines[$i], 1);
+                                if (isset($subLine[0]) && $subLine[0] === $subChar){
+                                    $subList[] = $subLine;
+                                } else {
+                                    break;
+                                }
+                            }
+                            --$i;
+                            $block['items'][] = $this->consumeList($subList, 0, $line[1] === '#' ? 'ol' : 'ul')[0];
+                            break;
+                        default:
+                            break 2;
+                    }
                 }
+
+            } else {
+                break;
             }
         }
 
-        return [$block, $i];
+        return [$block, --$i];
     }
 
     protected function consumeHeadline($lines, $current)
@@ -229,25 +306,6 @@ class WikiMarkup extends Markdown
         return [$block, $current];
     }
 
-    protected function consumeQuote($lines, $current)
-    {
-        $block = [
-            'type' => 'quote',
-            'lines' => [],
-        ];
-
-        for($i = $current, $count = count($lines); $i < $count; $i++){
-            $line = $lines[$i];
-            if (strpos($line, '> ') === 0){
-                $block['lines'][] = ltrim($line, '>');
-            } else {
-                break;
-            }
-        }
-
-        return [$block, --$i];
-    }
-
     protected function consumeNoFormat($lines, $current)
     {
 
@@ -271,7 +329,7 @@ class WikiMarkup extends Markdown
 
     protected function renderNoFormat($block)
     {
-        return empty($block['lines']) ? '' : "<pre>\n" . implode("\n", $block['lines']) ."</pre>\n";
+        return empty($block['lines']) ? '' : "<p>\n" . implode("\n", $block['lines']) ."</p>\n";
     }
 
     protected function renderParagraph($block)
@@ -293,9 +351,22 @@ class WikiMarkup extends Markdown
     {
         $tag = $block['list'];
 
+        //$output = '<pre>' . print_r($block['items'], true) . '</pre>';
+
         $output = "<" . $tag . ">\n";
-        foreach($block['items'] as $item){
-            $output .= "<li>" . is_array($item) ? $this->renderList($item) : $this->parseInline($item) . "</li>\n";
+        $items = $block['items'];
+        for ($i = 0, $count = count($items); $i < $count; $i++){
+            if (!is_array($items[$i])){
+                $output .= "<li>\n";
+                $output .= $this->parseInline($items[$i]);
+
+                if (isset($items[$i + 1]) && is_array($items[$i + 1]) && isset($items[$i + 1]['list'])){
+                    $output .= $this->renderList($items[$i + 1]);
+                    $i++;
+                }
+                $output .= "</li>\n";
+            }
+
         }
         $output .= "</" . $tag . ">\n";
 
@@ -325,6 +396,28 @@ class WikiMarkup extends Markdown
     protected function renderComment($block)
     {
         return '';
+    }
+
+    protected function renderCode($block)
+    {
+        $class = isset($block['language']) ? ' class="language-' . $block['language'] . '"' : '';
+        return "<code$class>" . htmlspecialchars(implode("\n", $block['content']) . "\n", ENT_NOQUOTES, 'UTF-8') . '</code>';
+    }
+
+    protected function renderPre($block)
+    {
+        return "<pre class='monospace'>" . htmlspecialchars(implode("\n", $block['content']) . "\n", ENT_NOQUOTES, 'UTF-8') . '</pre>';
+    }
+
+    protected function renderPanel($block)
+    {
+        $extra = isset($block['extra']) ? ' ' . $block['extra'] : '';
+        return "<div class='panel$extra'>\n" . $this->parseBlocks($block['content']) . "\n</div>";
+    }
+
+    protected function renderEscapeHTML($block)
+    {
+        return "<div>\n" . htmlspecialchars($this->parseBlocks($block['content']), ENT_NOQUOTES, "UTF-8") . "</div>\n";
     }
 
     protected function parseStrong($text)
@@ -449,7 +542,7 @@ class WikiMarkup extends Markdown
 
         return ['#', false];
     }
-    
+
     protected function internalLinkExists($link)
     {
         $call = $this->internalLinkExistsCall;

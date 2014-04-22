@@ -39,3 +39,11 @@
 .monospace {
     font-family: "courier new", courier, typewriter, monospace;
 }
+
+code {
+    white-space: pre-wrap;
+}
+
+.preserve-newline {
+    white-space: pre-wrap;
+}
