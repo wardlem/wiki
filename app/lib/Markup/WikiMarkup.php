@@ -549,7 +549,7 @@ class WikiMarkup extends Markdown
         if (!is_callable($call)){
             return false;
         }
-        return $this->$call($link);
+        return $call($link);
     }
 
     protected function createInternalLink($link)

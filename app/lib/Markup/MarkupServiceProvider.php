@@ -2,6 +2,7 @@
 
 namespace Markup;
 
+use Page;
 use Illuminate\Support\ServiceProvider;
 
 class MarkupServiceProvider extends ServiceProvider
@@ -15,7 +16,17 @@ class MarkupServiceProvider extends ServiceProvider
     {
 
         $this->app->singleton('markup', function(){
-            return new WikiMarkup();
+            $markup = new WikiMarkup();
+
+            $markup->registerInternalLinkExists(function($link){
+                return Page::find(array('slug' => $link ))->count() > 0;
+            });
+
+            $markup->registerCreateInternalLink(function($link){
+                return route('articles', $link);
+            });
+
+            return $markup;
         });
     }
 

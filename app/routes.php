@@ -53,9 +53,22 @@ Route::get('media/{page}/{tab?}', array('as' => 'media', 'uses' => 'PageControll
 
 Route::group(array('prefix' => 'page', 'before' => 'auth'), function(){
     Route::put('{page}', array('as' => 'update_page', 'uses' => 'PageController@updatePage'));
+    Route::post('/', array('as' => 'page.create', 'uses' => 'PageController@createPage'));
+    Route::get('/', array('as' => 'page.form', 'uses' => 'PageController@pageForm'));
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| Category Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::group(array('prefix' => 'category', 'before' => 'auth'), function(){
+    Route::post('/', array('as' => 'category.create', 'uses' => 'CategoryController@createCategory'));
+    Route::get('/', array('as' => 'category.form', 'uses' => 'CategoryController@categoryForm'));
+});
 
 
 /*

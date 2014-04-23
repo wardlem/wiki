@@ -27,6 +27,39 @@ class PageController extends BaseController
         ));
     }
 
+    public function pageForm()
+    {
+        $page = new Page();
+        $page->title = 'New Page';
+        return View::make('create-page', array(
+            'categories' => $this->getCategories(),
+            'page'       => $page,
+        ));
+    }
+
+    public function createPage()
+    {
+        $page = new Page();
+        $input = Input::all();
+        $v = Validator::make($input, $page->validationRules());
+        if ($v->fails()){
+            $fields = array('category_id', 'content', 'title', 'slug');
+            foreach($fields as $field){
+                Session::flash($field, Input::get($field));
+            }
+            return Redirect::route('page.create')
+                ->withErrors($v);
+        }
+
+        $page->category_id = Input::get('category_id');
+        $page->content = Input::get('content');
+        $page->title = Input::get('title');
+        $page->slug = Input::get('slug');
+        $page->save();
+
+        return $this->pageRedirect($page);
+    }
+
     public function updatePage(Page $page)
     {
         $fields = array('category_id', 'content', 'title', 'slug');
@@ -54,10 +87,6 @@ class PageController extends BaseController
         return $this->pageRedirect($page);
     }
 
-    protected function getCategories()
-    {
-        $categories = Category::with('pages')->get()->sortBy('name');
-        return $categories;
-    }
+
 
 }

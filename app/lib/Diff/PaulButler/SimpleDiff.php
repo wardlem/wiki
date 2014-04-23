@@ -46,12 +46,25 @@ class SimpleDiff
 
     function htmlDiff($old, $new){
         $ret = '<div>';
-        $diff = $this->diff(preg_split("/[\s]+/", $old), preg_split("/[\s]+/", $new));
+        //$diff = $this->diff(preg_split("/[\s]+/", $old), preg_split("/[\s]+/", $new));
+        $diff = $this->diff($old, $new);
         foreach($diff as $k){
-            if(is_array($k))
-                $ret .= (!empty($k['d'])?"<del>".implode(' ',$k['d'])."</del> ":'').
-                    (!empty($k['i'])?"<ins>".implode(' ',$k['i'])."</ins> ":'');
-            else $ret .= $k . ' ';
+            if(is_array($k)){
+                $d = implode("\n", empty($k['d']) ? array() : $k['d']);
+                $i = implode("\n", empty($k['i'])  ? array() : $k['i']);
+                $lineDiff = $this->diff(preg_split("/[\s]+/", $d), preg_split("/[\s]+/", $i));
+                foreach($lineDiff as $l){
+                    if (is_array($l)){
+                        $ret .= (!empty($l['d'])?"<del>".implode(' ',$l['d'])."</del> ":'').
+                            (!empty($l['i'])?"<ins>".implode(' ',$l['i'])."</ins> ":'');
+                    } else {
+                        $ret .= $l . ' ';
+                    }
+                }
+
+            } else {
+                $ret .= $k . ' ';
+            }
         }
         return $ret . '</div>';
     }

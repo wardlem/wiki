@@ -22,16 +22,11 @@ class Differ
      */
     public function revisions($revisions)
     {
-        $test = array();
 
-        foreach ($revisions as $revision){
-            $test[] = $revision->content;
-        }
-        //return $test;
         $html = array();
         for ($i = 0, $l = $revisions->count() - 1; $i < $l; $i++ )
         {
-            $html[] = $this->differ->htmlDiff($revisions[$i]->content, $revisions[$i + 1]->content);
+            $html[] = $this->differ->HTMldiff(explode("\n", $revisions[$i]->content), explode("\n", $revisions[$i + 1]->content));
         }
         return $html;
     }

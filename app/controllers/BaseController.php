@@ -33,4 +33,10 @@ class BaseController extends Controller {
         return route('article', $params);
     }
 
+    protected function getCategories()
+    {
+        $categories = Category::with('pages')->get()->sortBy('name');
+        return $categories;
+    }
+
 }

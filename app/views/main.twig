@@ -24,16 +24,18 @@
                 <!-- Right Nav Section -->
                 <ul class="right">
                     {% block topRightNav %}
-                    <li class="divider"></li>
-                    <li><a href="#"><span class="menu-icon">+</span> New Page</a></li>
-                    <li class="divider"></li>
-                    <li class="has-dropdown user-drop">
-                        <a href="#">{{ auth_user().username }}</a>
-                        <ul class="dropdown">
-                            <li><a href="{{ route('logout') }}">Logout</a></li>
-                            <li><a href="#">Settings</a></li>
-                        </ul>
-                    </li>
+                        <li class="divider"></li>
+                        <li><a href="{{ route('page.form') }}"><span class="menu-icon">+</span> New Page</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ route('category.form') }}"><span class="menu-icon">+</span> New Category</a></li>
+                        <li class="divider"></li>
+                        <li class="has-dropdown user-drop">
+                            <a href="#">{{ auth_user().username }}</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ route('logout') }}">Logout</a></li>
+                                <li><a href="#">Settings</a></li>
+                            </ul>
+                        </li>
                     {% endblock %}
                 </ul>
             </section>
