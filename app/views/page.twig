@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="columns large-12">
+                <div class="columns large-12 editor">
                     {{ form_label('content', 'Content') }}
                     {{ form_textarea('content', session_has('content') ? session_get('content') : page.content) }}
                     {% if errors.has('content') %}

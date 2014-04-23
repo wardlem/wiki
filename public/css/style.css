@@ -52,7 +52,7 @@ code {
     white-space: pre-wrap;
 }
 
-textarea {
+.editor textarea {
     box-sizing: border-box;
     font-family: Consolas, "Courier new", monospace;
     font-size: 16px;

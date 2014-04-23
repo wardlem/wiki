@@ -1,0 +1,2 @@
+[22-Apr-2014 22:01:22 America/Chicago] PHP Warning:  require(/home1/mwwardle/public_html/wiki/bootstrap/../vendor/autoload.php): failed to open stream: No such file or directory in /home1/mwwardle/public_html/wiki/bootstrap/autoload.php on line 17
+[22-Apr-2014 22:01:22 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home1/mwwardle/public_html/wiki/bootstrap/../vendor/autoload.php' (include_path='.:/opt/php55/lib/php') in /home1/mwwardle/public_html/wiki/bootstrap/autoload.php on line 17

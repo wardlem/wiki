@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'wiki',
-			'username'  => 'root',
-			'password'  => 'root',
+			'database'  => 'mwwardle_wiki',
+			'username'  => 'mwwardle_wiki',
+			'password'  => '$Ee11$Cc95',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
